@@ -44,7 +44,23 @@ if __name__ == "__main__":
         plt.plot(T, imfs[num], 'g')
         plt.xlim((tMin, tMax))
         plt.ylabel("Imf "+str(num+1))
+    u=1
+    cova=np.empty(imfNo)
+    pearson=np.empty(imfNo)
+    for u in range(imfNo):
+        cov1 = np.cov(S, imfs[u,:])
+        cova[u] = cov1[0, 1] / m.sqrt (np.cov(S) * np.cov(imfs[u,:]))
+        pearson[u] = 1 - cova[u]
+    plt.figure()
+    plt.title("pearson")
+    plt.plot(pearson, 'o', ls='-', ms=8)
+    plt.grid()
+    plt.savefig("pearson.png")
    
+    minM = np.where(pearson == np.amin(pearson))
+    idx = int(minM[len(minM)-1])
+    mur = np.sum(imfs[0:idx,:], axis=0)
+    S1S2 = np.sum(imfs[idx:imfNo,:], axis=0)
     plt.tight_layout()    
     plt.show()
 
